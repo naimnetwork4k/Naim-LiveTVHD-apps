@@ -30,30 +30,33 @@ jobs:
           npx cap init "Naim LiveTVHD" "com.naim.livetvhd" --web-dir=www
           npx cap add android
 
-      - name: Add Custom Logo to Android App Icons and Splash
+      - name: Apply Custom Logo and Cleartext Traffic
         run: |
+          # HTTP স্ট্রিম সাপোর্ট অন করা
           sed -i 's/<application/<application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
           
-          # আপনার আপলোড করা icon.png লোগোটিকে সব আইকন সাইজে সেট করে দেওয়া
-          mkdir -p android/app/src/main/res/mipmap-hdpi
-          mkdir -p android/app/src/main/res/mipmap-mdpi
-          mkdir -p android/app/src/main/res/mipmap-xhdpi
-          mkdir -p android/app/src/main/res/mipmap-xxhdpi
-          mkdir -p android/app/src/main/res/mipmap-xxxhdpi
-          
+          # আপনার লোগোটি যেন স্প্ল্যাশ স্ক্রিন ও আইকন হিসেবে কাজ করে সেজন্য সরাসরি রিসোর্স ফোল্ডারে সেট করা
+          mkdir -p android/app/src/main/res/drawable
           if [ -f "www/icon.png" ]; then
-            cp www/icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-            cp www/icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
-            cp www/icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-            cp www/icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
-            cp www/icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-            cp www/icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
-            cp www/icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-            cp www/icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
-            cp www/icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-            cp www/icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+            cp www/icon.png android/app/src/main/res/drawable/splash.png
+          elif [ -f "www/icon.jpg" ]; then
+            cp www/icon.jpg android/app/src/main/res/drawable/splash.png
           fi
-          
+
+          # বিভিন্ন রেজোলিউশনের আইকন ফোল্ডারে লোগো কপি করা
+          for sz in hdpi mdpi xhdpi xxhdpi xxxhdpi; do
+            mkdir -p android/app/src/main/res/mipmap-$sz
+            if [ -f "www/icon.png" ]; then
+              cp www/icon.png android/app/src/main/res/mipmap-$sz/ic_launcher.png
+              cp www/icon.png android/app/src/main/res/mipmap-$sz/ic_launcher_round.png
+              cp www/icon.png android/app/src/main/res/mipmap-$sz/ic_launcher_foreground.png
+            elif [ -f "www/icon.jpg" ]; then
+              cp www/icon.jpg android/app/src/main/res/mipmap-$sz/ic_launcher.png
+              cp www/icon.jpg android/app/src/main/res/mipmap-$sz/ic_launcher_round.png
+              cp www/icon.jpg android/app/src/main/res/mipmap-$sz/ic_launcher_foreground.png
+            fi
+          done
+
           npx cap sync android
 
       - name: Build Debug APK
