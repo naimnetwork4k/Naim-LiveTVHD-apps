@@ -30,14 +30,26 @@ jobs:
           npx cap init "Naim LiveTVHD" "com.naim.livetvhd" --web-dir=www
           npx cap add android
 
-      - name: Enable Cleartext Traffic & Copy Custom Logo to Android
+      - name: Add Custom Logo to Android App Icons and Splash
         run: |
-          # HTTP স্ট্রিম সাপোর্ট ঠিক করা
           sed -i 's/<application/<application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
           
-          # আপনার দেওয়া icon.png লোগোটিকে অ্যান্ড্রয়েডের ডিফল্ট আইকন ফোল্ডারে কপি করে দেওয়া
+          # আপনার আপলোড করা icon.png লোগোটিকে সব আইকন সাইজে সেট করে দেওয়া
+          mkdir -p android/app/src/main/res/mipmap-hdpi
+          mkdir -p android/app/src/main/res/mipmap-mdpi
+          mkdir -p android/app/src/main/res/mipmap-xhdpi
+          mkdir -p android/app/src/main/res/mipmap-xxhdpi
           mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+          
           if [ -f "www/icon.png" ]; then
+            cp www/icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+            cp www/icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+            cp www/icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+            cp www/icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+            cp www/icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+            cp www/icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+            cp www/icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+            cp www/icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
             cp www/icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
             cp www/icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
           fi
