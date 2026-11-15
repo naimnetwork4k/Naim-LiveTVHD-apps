@@ -32,7 +32,6 @@ jobs:
 
       - name: Generate App Icons and Splash Screen from Logo
         run: |
-          # Capacitor Assets ইনস্টল করে লোগো থেকে স্বয়ংক্রিয়ভাবে অ্যাপ আইকন ও স্প্ল্যাশ স্ক্রিন তৈরি করা
           npm install @capacitor/assets --save-dev
           npx capacitor-assets generate --icon www/icon.png --splash www/icon.png
 
