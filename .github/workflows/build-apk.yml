@@ -28,14 +28,14 @@ jobs:
         run: |
           npm install
           npx cap init "Naim LiveTVHD" "com.naim.livetvhd" --web-dir=www
-          npx cap add android
           npm install @capacitor/splash-screen
+          npx cap add android
 
-      - name: Configure Splash Screen and App Icons
+      - name: Setup Splash Screen and Icons
         run: |
           sed -i 's/<application/<application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
           
-          # বড় স্প্ল্যাশ স্ক্রিন ইমেজ সেট করার জন্য drawable ফোল্ডারে কপি করা
+          # স্প্ল্যাশ স্ক্রিন এবং আইকনের জন্য লোগো কপি করা
           mkdir -p android/app/src/main/res/drawable
           if [ -f "www/icon.png" ]; then
             cp www/icon.png android/app/src/main/res/drawable/splash.png
@@ -43,7 +43,6 @@ jobs:
             cp www/icon.jpg android/app/src/main/res/drawable/splash.png
           fi
 
-          # অ্যাপ আইকনগুলোর সাইজ সেট করা
           for sz in hdpi mdpi xhdpi xxhdpi xxxhdpi; do
             mkdir -p android/app/src/main/res/mipmap-$sz
             if [ -f "www/icon.png" ]; then
@@ -68,5 +67,5 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Naim-LiveTVHD-App-Large-Logo
+          name: Naim-LiveTVHD-Large-Splash
           path: android/app/build/outputs/apk/debug/app-debug.apk
