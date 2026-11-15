@@ -32,8 +32,8 @@ jobs:
 
       - name: Generate App Icons and Splash Screen from Logo
         run: |
-          npm install @capacitor/assets --save-dev
-          npx capacitor-assets generate --icon www/icon.png --splash www/icon.png
+          npm install -g @capacitor/assets
+          capacitor-assets generate --icon www/icon.png --splash www/icon.png
 
       - name: Enable Cleartext Traffic (HTTP Stream Support) & Permissions
         run: |
